@@ -1,6 +1,8 @@
 import streamlit as st
 from datetime import datetime
+from backend.mp3_to_text import SpeechWorker
 
+sw= SpeechWorker()
 # Get user's IP address
 ip_address = st.experimental_get_query_params().get("ip", ["Unknown"])[0]
 
@@ -11,13 +13,14 @@ log_txt = open('log_'+ip_address+'.txt', 'a', encoding="utf-8")
 
 log_txt.write('IP Adress: '+ip_address+'\n')
 log_txt.write('Start Date: '+current_date+'\n')
-
 # Set page title
 st.set_page_config(page_title='Smart Calls',
-                   page_icon='./axpo_2.png', layout='wide')
-
+                   page_icon='./png/axpo_2.png', layout='wide')
+col1, col2 = st.columns(2)
+col1.image('png/axpo_2.png')
+col2.title('Smart Calls')
 # Set page heading
-st.title('Smart Calls')
+#st.title('Smart Calls')
 
 # Add page subtitle and description
 st.write('''
@@ -35,7 +38,11 @@ if uploaded_file is not None:
     log_txt.write('Uploaded File: '+file_name+'\n')
 else:
     file_name = '**No file uploaded**'
+    st.stop()
 
+st.write('## Original Call Transcription')
+for chunk in sw.recognize_once(uploaded_file):
+    st.info(chunk)
 # # Call File Information
 # st.write('## Call File Info')
 # st.write('Here is the general info about the file:')
@@ -56,28 +63,28 @@ else:
 #     st.write('**No prompt given**')
 
 # Split the page into two columns
-col1, col2 = st.columns(2)
 
-with col1:
-    st.write('## Original Call Transcription')
-    st.write('Operador: ...')
-    st.write('Cliente: ...')
 
-with col2:
-    st.write('## Translated Call Transcription')
-    st.write('Operator: ...')
-    st.write('Client: ...')
+# with col1:
+#     st.write('## Original Call Transcription')
+#     st.write('Operador: ...')
+#     st.write('Cliente: ...')
 
-# Add call summary section
-st.write('## Call Summary')
-st.write('Here are some key insights from the call file:')
+# with col2:
+#     st.write('## Translated Call Transcription')
+#     st.write('Operator: ...')
+#     st.write('Client: ...')
 
-# Add customer sentiment section
-st.write('## Customer Sentiment')
-st.write('Here is an analysis of the customer sentiment during the call:')
+# # Add call summary section
+# st.write('## Call Summary')
+# st.write('Here are some key insights from the call file:')
 
-# Add agent performance section
-st.write('## Agent Performance')
-st.write('Here is an analysis of the agent performance during the call:')
+# # Add customer sentiment section
+# st.write('## Customer Sentiment')
+# st.write('Here is an analysis of the customer sentiment during the call:')
+
+# # Add agent performance section
+# st.write('## Agent Performance')
+# st.write('Here is an analysis of the agent performance during the call:')
 
 log_txt.close()
