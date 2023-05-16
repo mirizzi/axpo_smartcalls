@@ -1,18 +1,20 @@
 import streamlit as st
-from datetime import datetime
+# from datetime import datetime
 from backend.mp3_to_text import SpeechWorker
 
-sw= SpeechWorker()
-# Get user's IP address
-ip_address = st.experimental_get_query_params().get("ip", ["Unknown"])[0]
+sw = SpeechWorker()
 
-# Get current date and time
-current_date = datetime.now().strftime("%Y%m%d%H%M%S")
+# # Get user's IP address
+# ip_address = st.experimental_get_query_params().get("ip", ["Unknown"])[0]
 
-log_txt = open('log_'+ip_address+'.txt', 'a', encoding="utf-8")
+# # Get current date and time
+# current_date = datetime.now().strftime("%Y%m%d%H%M%S")
 
-log_txt.write('IP Adress: '+ip_address+'\n')
-log_txt.write('Start Date: '+current_date+'\n')
+# log_txt = open('log_'+ip_address+'.txt', 'a', encoding="utf-8")
+
+# log_txt.write('IP Adress: '+ip_address+'\n')
+# log_txt.write('Start Date: '+current_date+'\n')
+
 # Set page title
 st.set_page_config(page_title='Smart Calls',
                    page_icon='./png/axpo_2.png', layout='wide')
@@ -20,7 +22,7 @@ col1, col2 = st.columns(2)
 col1.image('png/axpo_2.png')
 col2.title('Smart Calls')
 # Set page heading
-#st.title('Smart Calls')
+# st.title('Smart Calls')
 
 # Add page subtitle and description
 st.write('''
@@ -33,16 +35,18 @@ uploaded_file = st.file_uploader('Choose a call file to analyze', type='mp3')
 # If file is uploaded, display its name
 if uploaded_file is not None:
     file_name = uploaded_file.name
-    current_date = datetime.now().strftime("%Y%m%d%H%M%S")
-    log_txt.write('Log Date: '+current_date+'\n')
-    log_txt.write('Uploaded File: '+file_name+'\n')
+    # current_date = datetime.now().strftime("%Y%m%d%H%M%S")
+    # log_txt.write('Log Date: '+current_date+'\n')
+    # log_txt.write('Uploaded File: '+file_name+'\n')
 else:
     file_name = '**No file uploaded**'
-    st.stop()
+    # st.stop()
 
 st.write('## Original Call Transcription')
-for chunk in sw.recognize_once(uploaded_file):
-    st.info(chunk)
+if uploaded_file is not None:
+    for chunk in sw.recognize_once(uploaded_file):
+        st.info(chunk)
+
 # # Call File Information
 # st.write('## Call File Info')
 # st.write('Here is the general info about the file:')
@@ -87,4 +91,4 @@ for chunk in sw.recognize_once(uploaded_file):
 # st.write('## Agent Performance')
 # st.write('Here is an analysis of the agent performance during the call:')
 
-log_txt.close()
+# log_txt.close()
